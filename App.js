@@ -63,7 +63,7 @@ export default class App extends React.Component {
       >
         <StatusBar barStyle={getBarStyle(this.state.luminosity)} />
         <Body>
-          <Clock color={getClockColor(this.state.luminosity)}>{this.state.time} 🕒</Clock>
+          <Clock color={getClockColor(this.state.luminosity)}>{this.state.time}</Clock>
         </Body>
       </Wrap>
     );
