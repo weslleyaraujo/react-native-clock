@@ -1,12 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, Image } from 'react-native';
+import { Text, View, StatusBar } from 'react-native';
 import styled from 'styled-components/native';
-import { invert, complement, saturate } from 'polished';
-
-const Title = styled.Text`
-  font-weight: bold;
-  color: ${props => props.color};
-`;
+import randomcolor from 'randomcolor';
 
 const Wrap = styled.View`
   flex: 1;
@@ -27,35 +22,43 @@ const Body = styled.View`
 `;
 
 const Clock = styled.Text`
-  color: white;
+  color: ${props => props.color};
   font-size: 40;
   font-weight: bold;
+  font-family: KohinoorBangla-Light;
 `;
+
+const getBarStyle = luminosity =>
+  luminosity === 'light' ? 'dark-content' : 'light-content';
+
+const getClockColor = luminosity =>
+  luminosity === 'light' ? 'black' : 'white';
+
+const pad = x => String(x).padStart(2, '0');
 
 export default class App extends React.Component {
 
   state = {
     time: '...',
     color: '#FBFBFB',
-    secondary: 'white',
-    thirdy: '#FBFBFB',
+    luminosity: 'light',
   }
 
   componentWillMount() {
     setInterval(() => {
       const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
-      const color = `hsl(${(hours * 60) * 0.25}, ${minutes + 20}%, ${seconds + 15}%)`;
-      const secondary = complement(color);
-      const thirdy = invert(secondary);
+      const hours = pad(now.getHours());
+      const minutes = pad(now.getMinutes());
+      const seconds = pad(now.getSeconds());
+      const luminosity = Math.random() <= 0.5 ? 'light' : 'dark';
+      const color = randomcolor({
+        luminosity,
+      });
 
       this.setState({
         time: `${hours}:${minutes}:${seconds}`,
         color,
-        secondary,
-        thirdy,
+        luminosity,
       });
     }, 1000);
   }
@@ -65,27 +68,9 @@ export default class App extends React.Component {
       <Wrap
         color={this.state.color}
       >
-        <StatusBar
-          backgroundColor={this.state.secondary}
-        />
-        <Header
-          color={this.state.secondary}
-        >
-          <Title
-            color={this.state.thirdy}
-          >
-            HELLO CLOCK
-          </Title>
-        </Header>
+        <StatusBar barStyle={getBarStyle(this.state.luminosity)} />
         <Body>
-          <Clock>{this.state.time}</Clock>
-          <Image
-            style={{
-              width: 100,
-              height: 100,
-            }}
-            source={require('./dick.svg')}
-          />
+          <Clock color={getClockColor(this.state.luminosity)}>{this.state.time} 🕒</Clock>
         </Body>
       </Wrap>
     );
