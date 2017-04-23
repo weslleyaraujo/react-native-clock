@@ -8,13 +8,6 @@ const Wrap = styled.View`
   background-color: ${props => props.color};
 `;
 
-const Header = styled.View`
-  background-color: ${props => props.color};
-  height: 60;
-  padding: 30 5 0 5;
-  align-items: center;
-`;
-
 const Body = styled.View`
   flex: 1;
   justify-content: center;
